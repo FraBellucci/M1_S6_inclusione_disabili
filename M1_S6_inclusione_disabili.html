@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1 S6 – Inclusione Lavoratori Disabili</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#006064,#00838f,#4dd0e1);min-height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center}
+.container{background:#fff;width:800px;height:550px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.header{background:linear-gradient(135deg,#004d40,#006064);color:#fff;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.header h1{font-size:15px;font-weight:700}.header p{font-size:11px;opacity:.8;margin-top:1px}
+button{padding:7px 13px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.btn-white{background:#fff;color:#004d40}.btn-white:hover{background:#e0f2f1}
+.btn-outline{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4)}.btn-outline:hover{background:rgba(255,255,255,.25)}
+.btn-group{display:flex;gap:8px}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.hidden{display:none!important}
+
+/* INSTRUCTIONS */
+.instr{padding:18px 24px;overflow-y:auto;flex:1}
+.instr h2{color:#004d40;font-size:16px;margin-bottom:10px}
+.instr p,.instr li{font-size:13px;line-height:1.6;color:#444;margin-bottom:5px}
+.instr ul{margin-left:18px;margin-bottom:10px}
+.law-box{background:#e0f2f1;border-left:4px solid #00838f;border-radius:7px;padding:10px 12px;font-size:12px;color:#004d40;margin:8px 0;line-height:1.5}
+.start-btn{background:linear-gradient(135deg,#004d40,#006064);color:#fff;padding:11px 32px;font-size:14px;border-radius:8px;display:block;margin:14px auto 0}
+.start-btn:hover{transform:translateY(-2px)}
+
+/* GAME */
+.game-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:12px 16px;gap:8px}
+.game-body{flex:1;display:flex;gap:14px;overflow:hidden;min-height:0}
+.pool-col{width:220px;display:flex;flex-direction:column;flex-shrink:0}
+.pool-col h3,.seq-col h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#555;margin-bottom:7px;flex-shrink:0}
+.pool-inner{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:#f5f5f5;border-radius:8px;padding:8px}
+.step-card{background:#fff;border:2px solid #00838f;border-radius:7px;padding:8px 10px;cursor:grab;font-size:11px;font-weight:600;color:#333;line-height:1.35;transition:all .2s;user-select:none}
+.step-card:hover{transform:translateX(3px);border-color:#004d40;box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.step-card.placed{opacity:.3;pointer-events:none}
+.seq-col{flex:1;display:flex;flex-direction:column;min-height:0}
+.slots{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.slot{display:flex;align-items:stretch;gap:6px;min-height:48px;flex-shrink:0}
+.slot-num{width:30px;height:auto;background:#00838f;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.slot-zone{flex:1;background:#f0fafa;border:2px dashed #80cbc4;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#aaa;padding:6px;transition:all .2s;cursor:default;min-height:48px}
+.slot-zone.over{background:#e0f2f1;border-color:#006064}
+.slot-zone.filled{background:#e0f2f1;border-color:#00838f;border-style:solid;justify-content:flex-start}
+.slot-content{display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px}
+.slot-text{font-size:11px;font-weight:600;color:#004d40;line-height:1.3;flex:1}
+.rm-btn{background:#e53935;color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.bottom-row{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.attempts{font-size:12px;color:#555}
+.check-btn{background:linear-gradient(135deg,#004d40,#006064);color:#fff;padding:9px 22px;font-size:13px;border-radius:8px;margin-left:auto}
+.check-btn:disabled{background:#ccc;cursor:not-allowed}
+.slot-zone.correct-slot{background:#e8f5e9;border-color:#43a047;border-style:solid}
+.slot-zone.wrong-slot{background:#ffebee;border-color:#e53935;border-style:solid}
+
+/* FEEDBACK */
+.fb-page{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+.fb-box{text-align:center;max-width:500px}
+.fb-icon{font-size:55px;margin-bottom:12px}
+.fb-box h2{font-size:22px;font-weight:700;color:#004d40;margin-bottom:8px}
+.fb-box p{font-size:13px;color:#555;line-height:1.6;margin-bottom:15px}
+.score-disp{background:#e0f2f1;border-radius:10px;padding:10px 20px;font-size:16px;font-weight:700;color:#006064;margin-bottom:15px;display:inline-block}
+.fb-btns{display:flex;gap:10px;justify-content:center}
+.btn-prim{background:linear-gradient(135deg,#004d40,#006064);color:#fff;padding:10px 24px;font-size:13px;border-radius:8px}
+.btn-sec{background:#78909c;color:#fff;padding:10px 24px;font-size:13px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>♿ Riordina la Procedura – Inserimento Lavoratori Disabili</h1>
+      <p>Modulo 1 · Sezione 6 – Inclusione Lavoratori Disabili</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="resetGame()">🔄 Ricomincia</button>
+      <button class="btn-white" onclick="window.close()">✕ Torna al Corso</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- INSTRUCTIONS -->
+    <div id="instrPage" class="instr">
+      <h2>🎯 Obiettivo</h2>
+      <p>Il collocamento mirato dei lavoratori con disabilità segue una procedura precisa definita dalla legge. Trascina gli <strong>8 passaggi</strong> negli slot numerati nell'ordine corretto.</p>
+      <div class="law-box">
+        📌 <b>L. 68/1999</b> – Norme per il diritto al lavoro dei disabili: obbligo di assunzione per aziende >15 dipendenti (1% ÷ 7% in base alla dimensione). Il DL ha obblighi di <b>accomodamento ragionevole</b> ai sensi del D.Lgs. 216/2003.
+      </div>
+      <ul>
+        <li>Trascina ogni fase dalla colonna sinistra allo slot numerato corrispondente</li>
+        <li>Puoi rimuovere e riposizionare le fasi prima di verificare</li>
+        <li>Clicca <strong>Verifica</strong> quando sei pronto</li>
+      </ul>
+      <button class="start-btn" onclick="startGame()">▶ Inizia il Gioco</button>
+    </div>
+
+    <!-- GAME -->
+    <div id="gamePage" class="game-wrap hidden">
+      <div class="game-body">
+        <div class="pool-col">
+          <h3>📦 Fasi da posizionare</h3>
+          <div class="pool-inner" id="poolInner"></div>
+        </div>
+        <div class="seq-col">
+          <h3>🔢 Sequenza corretta (trascina qui)</h3>
+          <div class="slots" id="slotsContainer"></div>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <span class="attempts">Tentativi: <b id="attCount">0</b></span>
+        <button class="check-btn" id="checkBtn" onclick="checkSeq()" disabled>✓ Verifica Sequenza</button>
+      </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div id="fbPage" class="fb-page hidden">
+      <div class="fb-box">
+        <div class="fb-icon">♿</div>
+        <h2 id="fbTitle">Procedura Completata!</h2>
+        <p id="fbText"></p>
+        <div class="score-disp" id="fbScore">–</div>
+        <div class="fb-btns">
+          <button class="btn-prim" onclick="resetGame()">🔄 Rigioca</button>
+          <button class="btn-sec" onclick="window.close()">Torna al Corso</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CORRECT=[
+  "Verifica dell'obbligo di riserva (L. 68/99) in base all'organico aziendale",
+  "Contatto con il Centro per l'Impiego e iscrizione al collocamento mirato",
+  "Analisi del profilo di disabilità e delle capacità residue del candidato",
+  "Valutazione dell'accomodamento ragionevole: adattamento della postazione/mansione",
+  "Elaborazione del Piano di Inserimento personalizzato con il Referente per l'inclusione",
+  "Formazione e informazione del team di lavoro che accoglierà il lavoratore",
+  "Affiancamento e tutoraggio nel periodo di inserimento e adattamento",
+  "Monitoraggio periodico dell'inserimento e aggiornamento del Piano se necessario"
+];
+
+let current=Array(8).fill(null);
+let attempts=0;
+let dragged=null;
+
+function startGame(){
+  current=Array(8).fill(null);
+  attempts=0;
+  document.getElementById('attCount').textContent='0';
+  renderPool();
+  renderSlots();
+  document.getElementById('checkBtn').disabled=true;
+  showPage('gamePage');
+}
+
+function renderPool(){
+  const pool=document.getElementById('poolInner');
+  pool.innerHTML='';
+  const shuffled=[...CORRECT].sort(()=>Math.random()-.5);
+  shuffled.forEach(step=>{
+    if(current.includes(step)) return;
+    const d=document.createElement('div');
+    d.className='step-card'; d.textContent=step; d.draggable=true;
+    d.dataset.step=step;
+    d.ondragstart=e=>{dragged=step;e.dataTransfer.effectAllowed='move';};
+    pool.appendChild(d);
+  });
+}
+
+function renderSlots(){
+  const cont=document.getElementById('slotsContainer');
+  cont.innerHTML='';
+  for(let i=0;i<8;i++){
+    const row=document.createElement('div'); row.className='slot';
+    const num=document.createElement('div'); num.className='slot-num'; num.textContent=i+1;
+    const zone=document.createElement('div'); zone.className='slot-zone'; zone.dataset.idx=i;
+    if(current[i]){
+      zone.classList.add('filled');
+      const sc=document.createElement('div'); sc.className='slot-content';
+      const st=document.createElement('span'); st.className='slot-text'; st.textContent=current[i];
+      const rm=document.createElement('button'); rm.className='rm-btn'; rm.textContent='×';
+      rm.onclick=()=>removeFromSlot(i);
+      sc.appendChild(st); sc.appendChild(rm); zone.appendChild(sc);
+    } else {
+      zone.textContent='Trascina qui la fase '+(i+1);
+      zone.ondragover=e=>{e.preventDefault();zone.classList.add('over');};
+      zone.ondragleave=()=>zone.classList.remove('over');
+      zone.ondrop=e=>dropToSlot(e,i,zone);
+    }
+    row.appendChild(num); row.appendChild(zone);
+    cont.appendChild(row);
+  }
+}
+
+function dropToSlot(e,idx,zone){
+  e.preventDefault(); zone.classList.remove('over');
+  if(!dragged) return;
+  if(current.includes(dragged)) return;
+  current[idx]=dragged; dragged=null;
+  renderPool(); renderSlots();
+  document.getElementById('checkBtn').disabled=current.some(c=>c===null);
+}
+
+function removeFromSlot(idx){
+  current[idx]=null;
+  renderPool(); renderSlots();
+  document.getElementById('checkBtn').disabled=true;
+}
+
+function checkSeq(){
+  attempts++;
+  document.getElementById('attCount').textContent=attempts;
+  let correct=0;
+  const zones=document.querySelectorAll('.slot-zone');
+  zones.forEach((z,i)=>{
+    z.classList.remove('correct-slot','wrong-slot');
+    if(!current[i]) return;
+    const ok=current[i]===CORRECT[i];
+    z.classList.add(ok?'correct-slot':'wrong-slot');
+    if(ok) correct++;
+  });
+  if(correct===8){
+    setTimeout(()=>{
+      document.getElementById('fbTitle').textContent=attempts===1?'Perfetto al Primo Tentativo! 🏆':'Procedura Completata!';
+      document.getElementById('fbText').textContent='Hai ordinato correttamente tutte le 8 fasi della procedura di inserimento del lavoratore disabile. La L. 68/1999 e il D.Lgs. 216/2003 richiedono un approccio personalizzato e continuativo.';
+      document.getElementById('fbScore').textContent='Completato in '+attempts+(attempts===1?' tentativo':' tentativi');
+      showPage('fbPage');
+    },800);
+  }
+}
+function resetGame(){showPage('instrPage');}
+function showPage(id){['instrPage','gamePage','fbPage'].forEach(p=>document.getElementById(p).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+</script>
+</body>
+</html>
